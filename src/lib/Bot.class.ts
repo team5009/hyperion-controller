@@ -53,19 +53,19 @@ export class Bot {
         const cosVal = Math.cos(theta);
 
         if (Math.abs(deltaRot) > 0) { 
-            this.drot = deltaRot * 0.025;
+            this.drot = deltaRot * this.speed/150;
         } else {
             this.drot = 0;
         }
 
         if (Math.abs(deltaX) > 0) {
-            this.dx = cosVal * this.speed;
+            this.dx = cosVal * (Math.abs(deltaX/2) / this.speed);
         } else {
             this.dx = 0;
         }
 
         if (Math.abs(deltaY) > 0) {
-            this.dy = sinVal * this.speed;
+            this.dy = sinVal * (Math.abs(deltaY/2)/this.speed);
         } else {
             this.dy = 0;
         }
@@ -82,7 +82,7 @@ export class Bot {
         this.x = convertedPoint.x;
         this.y = convertedPoint.y;
         this.rot = degToRad(point.rot);
-        
+
         this.draw(context);
     }
 }

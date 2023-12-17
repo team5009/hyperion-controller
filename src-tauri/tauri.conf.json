@@ -22,10 +22,9 @@
       "targets": "all",
       "identifier": "com.tauri.dev",
       "icon": [
+        "icons/16x16.png",
         "icons/32x32.png",
-        "icons/128x128.png",
-        "icons/128x128@2x.png",
-        "icons/icon.icns",
+        "icons/150x150.png",
         "icons/icon.ico"
       ]
     },
@@ -36,9 +35,11 @@
       {
         "fullscreen": false,
         "resizable": true,
-        "title": "hyperion-controller",
-        "width": 800,
-        "height": 600
+        "title": "Hyperion Controller",
+        "width": 1080,
+        "height": 720,
+        "minHeight": 700,
+        "minWidth": 800
       }
     ]
   }

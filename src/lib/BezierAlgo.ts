@@ -3,6 +3,7 @@ import { Point } from ".";
 export function Lerp(a: number, b: number, t: number): number {
     return a + (b - a) * t;
 }
+
 export function Bezier(p0: Point, c0: Point, c1: Point, p1: Point): Point[] {
     const points: Point[] = [];
     for (let i = 0; i <= 1; i+=0.05) {
@@ -22,7 +23,7 @@ export function Bezier(p0: Point, c0: Point, c1: Point, p1: Point): Point[] {
             rot = Math.atan2(y3 - p0.y, x3 - p0.x);
         }
         
-        if (rot < Math.PI / 4) {
+        if (rot > Math.PI / 4) {
             rot = Lerp(p0.rot, p1.rot, i);
         } else if (i >= 1) {
             rot = Lerp(p0.rot, p1.rot, i);

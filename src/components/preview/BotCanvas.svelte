@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { Bezier, Bot, Point, PreviewAppState, canvasToField, fieldToCanvas } from "../../lib";
+    import { Bezier, Bot, Point, PreviewAppState, canvasToField, degToRad, fieldToCanvas } from "../../lib";
     import { BotPosition, appPreviewState, mousePosition } from "../../store";
     export let resolution: number;
 
@@ -56,8 +56,6 @@
         const updateBot = () => {
             requestAnimationFrame(updateBot);
 
-
-
             if (AppState !== PreviewAppState.RUNNING) {
 
                 if (AppState === PreviewAppState.RESETING) {
@@ -74,12 +72,20 @@
             if (pointStep >= mapPoints.length || mapPoints[pointStep] === undefined) {
                 appPreviewState.set(PreviewAppState.STOPPED);
             } else if (
-                Math.abs(convertBot.x - mapPoints[pointStep].x) <= 1080/resolution * 0.75 &&
-                Math.abs(convertBot.y - mapPoints[pointStep].y) <= 1080/resolution * 0.75 &&
-                Math.abs(bot.rot - mapPoints[pointStep].rot) <= 1080/resolution * 0.75
+                Math.abs(convertBot.x - mapPoints[pointStep].x) <= 1080/resolution * 0.8 &&
+                Math.abs(convertBot.y - mapPoints[pointStep].y) <= 1080/resolution * 0.8 &&
+                Math.abs(bot.rot - degToRad(mapPoints[pointStep].rot)) <= Math.PI / 3
             ) {
+
+                // if (pointStep == mapPoints.length - 1 ||
+                //     Math.abs(bot.rot - degToRad(mapPoints[pointStep].rot)) <= Math.PI / 3
+                // ) {
+                //     bot.update(ctx, {x: maxWidth, y: maxHeight}, mapPoints[pointStep]);
+                //     BotPosition.set(bot);
+                //     return;
+                // }
                 pointStep++;
-            } else {
+            } else if (pointStep < mapPoints.length) {
                 bot.update(ctx, {x: maxWidth, y: maxHeight}, mapPoints[pointStep]);
                 BotPosition.set(bot);
             }

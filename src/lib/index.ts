@@ -15,9 +15,24 @@ export enum PreviewAppState {
     RESETING // The preview is reseting
 }
 
+export enum AppState {
+    MENU, // The app is in the menu
+    CREATOR, // The app is in the editor
+    PREVIEW, // The app is in the preview
+    SETTINGS // The app is in the settings
+}
+
 export function Point(x: number, y: number, rot: number): Point {
     return { x, y: y, rot };
 }
+
+export type Command = "Start" | "Wait" | "Goto" | "Spline";
+export type CommandPath = {
+    "Start" : Point,
+    "Wait" : String,
+    "Goto" : Point,
+    "Spline" : Point[],
+};
 
 export {
     canvasToField,

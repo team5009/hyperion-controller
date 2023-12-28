@@ -1,67 +1,96 @@
 <script lang="ts">
-  import FieldCanvas from './components/preview/FieldCanvas.svelte';
-  import BotCanvas from './components/preview/BotCanvas.svelte';
-  import { BotPosition, appPreviewState, mousePosition } from './store';
-  import { Point, PreviewAppState, canvasToField, radToDeg, resolution } from './lib';
-  import PathCanvas from './components/preview/PathCanvas.svelte';
-  import FieldMap from './components/layout/FieldMap.svelte';
+  import Preview from './components/preview/Preview.svelte';
+  import Menu from './components/layout/Menu.svelte';
+  import { BotPosition, appState, mousePosition } from './store';
+  import { AppState, canvasToField, radToDeg } from './lib';
+  import NavBar from './components/layout/NavBar.svelte';
+  import {type FadeParams} from 'svelte/transition';
+  import FileInput from './components/layout/FileInput.svelte';
 
-  const fieldResolution = resolution;
+  let state: AppState;
   const mousePos = {
-    x: "0",
-    y: "0"
+        x: "0",
+        y: "0"
+    }
+    const botPos = {
+        x: "0",
+        y: "0",
+        rot: "0"
+    };
+    appState.subscribe((value) => {
+      state = value;
+    });
+
+    mousePosition.subscribe((value) => {
+        const point = canvasToField(value);
+        mousePos.x = point.x.toFixed(1);
+        mousePos.y = point.y.toFixed(1);
+    })
+
+    BotPosition.subscribe((value) => {
+        const point = canvasToField(value);
+        botPos.x = point.x.toFixed(1);
+        botPos.y = point.y.toFixed(1);
+        botPos.rot = radToDeg(value.rot).toFixed(1);
+    })
+
+  const fadeOption: FadeParams = {
+    delay: 0,
+    duration: 300,
+
   }
-  const botPos = {
-    x: "0",
-    y: "0",
-    rot: "0"
-  };
-
-  mousePosition.subscribe((value) => {
-    const point = canvasToField(value);
-    mousePos.x = point.x.toFixed(1);
-    mousePos.y = point.y.toFixed(1);
-  })
-
-  BotPosition.subscribe((value) => {
-    const point = canvasToField(value);
-    botPos.x = point.x.toFixed(1);
-    botPos.y = point.y.toFixed(1);
-    botPos.rot = radToDeg(value.rot).toFixed(1);
-  })
 </script>
 
-<main class="container">
+{#if state !== AppState.MENU}
+  <NavBar />
+{/if}
+<main>
+  {#if state == AppState.MENU}
+  <Menu transition={fadeOption}/>
+  {:else if state == AppState.SETTINGS}
+    <h1>Settings</h1>
+  {:else}
+    <div class="grid-container">
+      <section class="field">
+      {#if state == AppState.PREVIEW}
+        <Preview transition={fadeOption}/>
+      {:else if state == AppState.CREATOR}
+        <h1>Creator</h1>
+      {/if}
+      </section>
 
-  <div class="game">
-    <FieldCanvas resolution={fieldResolution}/>
-    <BotCanvas resolution={fieldResolution}/>
-    <PathCanvas resolution={fieldResolution}/>
-    <FieldMap/>
-  </div>
-  <div class="status">
-    <p>Mouse position: {mousePos.x}, {mousePos.y}</p>
-    <p>Bot position: {botPos.x}, {botPos.y}, {botPos.rot}</p>
-  </div>
-  <div>
-    <button on:click={() => appPreviewState.set(PreviewAppState.RESETING)}>Reset</button>
-    <button on:click={() => appPreviewState.set(PreviewAppState.RUNNING)}>Start</button>
-    <button on:click={() => appPreviewState.set(PreviewAppState.STOPPED)}>Stop</button>
-    <button on:click={() => appPreviewState.set(PreviewAppState.PAUSED)}>Pause</button>
-  </div>
+      <section class="info">
+        <p>Mouse position: {mousePos.x}, {mousePos.y}</p>
+        <p>Bot position: {botPos.x}, {botPos.y}, {botPos.rot}</p>
+      </section>
 
+      <section class="files">
+        <FileInput />
+      </section>
+    </div>
+  {/if}
 </main>
 
 <style>
-  .game {
-    position: relative;
+  main {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+    margin: 1rem 0;
   }
-  .status {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
+
+  main .grid-container {
+    display: grid; 
+    grid-auto-columns: 1fr; 
+    grid-template-columns: 20em 1fr; 
+    grid-template-rows: 2fr 0.9fr; 
+    gap: 0px 0px; 
+    grid-template-areas: 
+      "files field"
+      "info field"; 
   }
+  main .grid-container .field { grid-area: field; }
+  main .grid-container .info { grid-area: info; }
+  main .grid-container .files { grid-area: files; }
 </style>

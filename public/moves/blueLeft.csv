@@ -1,9 +1,15 @@
-start,-63, -12, 0,NOTHING
-wait,0.1,NOTHING,
-goto,-35,-12,0,NOTHING
-goto,-36,-50,90,NOTHING
-wait,0.1,NOTHING,
-bezier,-62,-12,90,NOTHING
-control,-48,-40,0,NOTHING
-control,-48,-40,0,NOTHING
-bezier,-65,-60,90,NOTHING
+start   ,-63 ,-12     , 0 ,NOTHING
+wait    , OUTTAKE,NOTHING
+goto    ,-35 ,-12     , 0 ,NOTHING
+goto    ,-36 ,-50     ,90 ,NOTHING
+wait    , OUTTAKE_LIFT,NOTHING
+spline, NOTHING
+bezier  ,-62 ,-12     ,90 ,NOTHING
+control ,-48 ,-40     , 0 ,NOTHING
+control ,-48 ,-40     , 0 ,NOTHING
+bezier  ,-65 ,-60     ,90 ,NOTHING
+bezier  ,-65 ,-60     ,90 ,NOTHING
+control ,-48 ,-40     , 0 ,NOTHING
+control ,-48 ,-40     , 0 ,NOTHING
+bezier  ,-62 ,-12     ,90 ,NOTHING
+spline, NOTHING

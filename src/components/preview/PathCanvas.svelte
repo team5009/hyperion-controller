@@ -22,12 +22,14 @@
     onMount(() => {
         c.width = resolution;
         c.height = c.width;
-
+        
         const ctx = c.getContext("2d");
-
+        
         if (!ctx) {
             throw new Error("Could not get context");
         }
+        const maxWidth = c.width;
+        const maxHeight = c.height;
 
         const mapPoints: Point[] = [
             Point(-36, -50, 90),
@@ -50,7 +52,7 @@
             requestAnimationFrame(update);
             if (AppState !== PreviewAppState.RUNNING) {
                 if (AppState === PreviewAppState.RESETING) {
-                    ctx.clearRect(0, 0, c.width, c.height);
+                    ctx.clearRect(0, 0, maxWidth, maxHeight);
                     ctx.beginPath();
                     ctx.moveTo(botPos.x, botPos.y);
                 }

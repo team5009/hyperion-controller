@@ -27,7 +27,7 @@ export function Point(x: number, y: number, rot: number): Point {
 }
 
 export type Command = "Start" | "Wait" | "Goto" | "Spline";
-export type CommandPath = {
+export interface CommandPath {
     "Start" : Point,
     "Wait" : String,
     "Goto" : Point,

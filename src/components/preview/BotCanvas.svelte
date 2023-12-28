@@ -63,6 +63,40 @@
             }
             
             const convertBot = canvasToField(bot);
+            switch (Object.keys(commandPath[pointStep])[0].toLowerCase()) {
+                case "start" : {
+                    bot.resetPosition(ctx,{x: maxWidth, y: maxHeight}, commandPath[pointStep].Start);
+                    pointStep++;
+                    break;
+                }
+                case "goto": {
+                    if (pointStep >= commandPath.length) {
+                        appPreviewState.set(PreviewAppState.STOPPED);
+                        return;
+                    }
+                    const point = commandPath[pointStep].Goto;
+                    if (
+                        Math.abs(convertBot.x - point.x) <= 1080/resolution * 0.8 &&
+                        Math.abs(convertBot.y - point.y) <= 1080/resolution * 0.8 &&
+                        Math.abs(bot.rot - degToRad(point.rot)) <= Math.PI / 3
+                    ) {
+                        pointStep++;
+                    } else {
+                        bot.update(ctx, {x: maxWidth, y: maxHeight}, point);
+                    }
+                    break;
+                }
+                case "wait": {
+                    console.log(`Waiting for ${commandPath[pointStep].Wait} to succeed`);
+                    pointStep++;
+                    break;
+                }
+                case "spline": {
+                    const spline = commandPath[pointStep].Spline;
+                    console.log(spline);
+                    break;
+                }
+            }
 
             // if (pointStep >= mapPoints.length || mapPoints[pointStep] === undefined) {
             //     appPreviewState.set(PreviewAppState.STOPPED);

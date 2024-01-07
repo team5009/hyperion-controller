@@ -1,7 +1,8 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { Bezier, Bot, Point, PreviewAppState, canvasToField, degToRad, fieldToCanvas, type CommandPath } from "../../lib";
-    import { BotPosition, appPreviewState, mousePosition, pathCommands } from "../../store";
+    import { Bot, PreviewAppState, canvasToField, degToRad, type CommandPath, Bezier } from "../../lib";
+    import { BotPosition, appPreviewState, pathCommands } from "../../store";
+  import { writable } from "svelte/store";
     export let resolution: number;
 
     let c: HTMLCanvasElement;
@@ -14,8 +15,18 @@
         AppState = value;
     })
 
-    pathCommands.subscribe((value) => {
+    let botStateString = ""
+    let botState = writable("")
+    botState.subscribe((value) => {
+        botStateString = value;
+        if (value === "wait") {
+            setTimeout(() => {
+                botState.set("complete")
+            }, 4000)
+        }
+    })
 
+    pathCommands.subscribe((value) => {
         if (value.length === 0) {
             commandPath = [];
             return;
@@ -39,13 +50,11 @@
 
         let startPos = {x: 0, y: 0, rot: 0};
         
-
         const bot = new Bot(startPos, speed);
         BotPosition.set(bot);
         bot.draw(ctx);
         const updateBot = () => {
             requestAnimationFrame(updateBot);
-
             
             if (AppState !== PreviewAppState.RUNNING) {
                 switch (AppState) {
@@ -88,12 +97,16 @@
                 }
                 case "wait": {
                     console.log(`Waiting for ${commandPath[pointStep].Wait} to succeed`);
-                    pointStep++;
+                    // console.log(botStateString)
+                    if (botStateString === "") botState.set("wait");
+                    if (botStateString === "complete") {
+                        pointStep++
+                        botState.set("")};
                     break;
                 }
                 case "spline": {
                     const spline = commandPath[pointStep].Spline;
-                    console.log(spline);
+                    const bezier = Bezier();
                     break;
                 }
             }

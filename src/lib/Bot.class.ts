@@ -52,6 +52,8 @@ export class Bot {
         const sinVal = Math.sin(theta);
         const cosVal = Math.cos(theta);
 
+        // get the current postion a devide by the final position distance
+
         if (Math.abs(deltaRot) > 0) { 
             this.drot = deltaRot * this.speed/150;
         } else {

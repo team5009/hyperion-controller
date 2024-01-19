@@ -1,8 +1,9 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { Bot, PreviewAppState, canvasToField, degToRad, type CommandPath, Bezier } from "../../lib";
+    import { Bot, PreviewAppState, canvasToField, degToRad, type CommandPath, Bezier, Point } from "../../lib";
     import { BotPosition, appPreviewState, pathCommands } from "../../store";
   import { writable } from "svelte/store";
+  import { invoke } from "@tauri-apps/api/tauri";
     export let resolution: number;
 
     let c: HTMLCanvasElement;
@@ -42,6 +43,10 @@
         const maxHeight = c.height;
         const speed = 10;
         let pointStep = 0;
+        let splineStep = 0;
+        let isSpline = false;
+        let bezierStep = 0;
+        let bezierPoints: Point[] = [];
         const currentPath = []
 
         if (!ctx) {
@@ -53,7 +58,7 @@
         const bot = new Bot(startPos, speed);
         BotPosition.set(bot);
         bot.draw(ctx);
-        const updateBot = () => {
+        const updateBot = async () => {
             requestAnimationFrame(updateBot);
             
             if (AppState !== PreviewAppState.RUNNING) {
@@ -91,6 +96,7 @@
                     ) {
                         pointStep++;
                     } else {
+                        bot.updateNextPoint(point)
                         bot.update(ctx, {x: maxWidth, y: maxHeight}, point);
                     }
                     break;
@@ -106,7 +112,40 @@
                 }
                 case "spline": {
                     const spline = commandPath[pointStep].Spline;
-                    const bezier = Bezier();
+                    if (splineStep >= spline.length) {
+                        pointStep++;
+                        splineStep = 0;
+                        bezierPoints = [];
+                        isSpline = false;
+                        break;
+                    }
+                    if (!isSpline) {
+                        const bezier = await invoke('gen_bezier_points', {points: spline[splineStep], resolution: 20}) as Point[]
+                        bezierPoints.push(...bezier);
+                        isSpline = true;
+                    }
+
+                    if (isSpline) {
+                        if (bezierStep >= bezierPoints.length) {
+                            bezierStep = 0;
+                            splineStep++;
+                            isSpline = false;
+                            break;
+                        }
+                        const point = bezierPoints[bezierStep];
+                        if (
+                            Math.abs(convertBot.x - point.x) >= 1080/resolution * 0.8 &&
+                            Math.abs(convertBot.y - point.y) >= 1080/resolution * 0.8 &&
+                            Math.abs(bot.rot - degToRad(point.rot)) >= Math.PI / 3
+                            ) {
+                            console.log(bezierPoints[bezierPoints.length - 1])
+                            bot.updateNextPoint(bezierPoints[bezierPoints.length - 1])
+                            bot.update(ctx, {x: maxWidth, y: maxHeight}, point);
+                        } else {
+                            bezierStep++;
+                        }
+                    }
+
                     break;
                 }
             }

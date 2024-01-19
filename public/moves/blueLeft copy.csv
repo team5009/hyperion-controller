@@ -1,4 +1,0 @@
-start   ,0 ,0     , 0 ,NOTHING
-goto    ,-10 ,-20     , 0 ,NOTHING
-goto    ,0 ,-14     ,0 ,NOTHING
-wait    , OUTTAKE,NOTHING

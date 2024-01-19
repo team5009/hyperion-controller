@@ -8,6 +8,7 @@ export class Bot {
     x: number;
     y: number;
     rot: number;
+    finalPoint: Point = Point(0, 0, 0);
     constructor(
         point: Point,
         private speed: number,
@@ -41,12 +42,21 @@ export class Bot {
 
     }
 
+    updateNextPoint(point: Point) {
+        this.finalPoint = {
+            ...fieldToCanvas(point),
+            rot: degToRad(point.rot)
+        }
+    }
+
     update(context: CanvasRenderingContext2D, max: {x: number, y: number}, point: Point) {
         context.clearRect(0, 0, max.x, max.y);
         this.draw(context);
-        const convertedPoint = fieldToCanvas(point);
-        const deltaX = convertedPoint.x - this.x;
-        const deltaY = convertedPoint.y - this.y;
+        const nextPoint = fieldToCanvas(point);
+        const deltaX = nextPoint.x - this.x;
+        const deltaY = nextPoint.y - this.y;
+        const distanceX = this.finalPoint.x - this.x;
+        const distanceY = this.finalPoint.y - this.y;
         const deltaRot = refRad(degToRad(point.rot)) - this.rot;
         const theta = Math.atan2(deltaY, deltaX);
         const sinVal = Math.sin(theta);
@@ -61,13 +71,13 @@ export class Bot {
         }
 
         if (Math.abs(deltaX) > 0) {
-            this.dx = cosVal * (Math.abs(deltaX/2) / this.speed);
+            this.dx = cosVal * (Math.abs(distanceX/2) / this.speed);
         } else {
             this.dx = 0;
         }
 
         if (Math.abs(deltaY) > 0) {
-            this.dy = sinVal * (Math.abs(deltaY/2)/this.speed);
+            this.dy = sinVal * (Math.abs(distanceY/2)/this.speed);
         } else {
             this.dy = 0;
         }

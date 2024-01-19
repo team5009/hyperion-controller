@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Connection from './components/extra/Connection.svelte';
   import Preview from './components/preview/Preview.svelte';
   import Menu from './components/layout/Menu.svelte';
   import { BotPosition, appState, mousePosition } from './store';
@@ -41,6 +42,7 @@
   }
 </script>
 
+<Connection />
 {#if state !== AppState.MENU}
   <NavBar />
 {/if}

@@ -32,7 +32,7 @@
     "bundle": {
       "active": true,
       "targets": "all",
-      "identifier": "com.tauri.dev",
+      "identifier": "ca.helios5009.dev",
       "icon": [
         "icons/16x16.png",
         "icons/32x32.png",

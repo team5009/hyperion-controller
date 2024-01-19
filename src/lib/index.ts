@@ -23,7 +23,7 @@ export enum AppState {
 }
 
 export function Point(x: number, y: number, rot: number): Point {
-    return { x, y: y, rot };
+    return { x, y, rot };
 }
 
 export type Command = "Start" | "Wait" | "Goto" | "Spline";
@@ -31,7 +31,7 @@ export interface CommandPath {
     "Start" : Point,
     "Wait" : String,
     "Goto" : Point,
-    "Spline" : Point[],
+    "Spline" : Point[][],
 };
 
 export {

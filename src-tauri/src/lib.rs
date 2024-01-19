@@ -1,4 +1,8 @@
+use async_trait::async_trait;
+
+pub mod connection;
 pub mod construction;
+pub mod math;
 
 #[derive(PartialEq)]
 pub enum State {
@@ -10,7 +14,15 @@ pub enum State {
     // End,
 }
 
-#[derive(serde::Serialize)]
+#[derive(serde::Serialize, serde::Deserialize)]
+pub enum ConnectionStatus {
+    Connected,
+    Disconnected,
+    Pending,
+    Error,
+}
+
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Point {
     x: f32,
     y: f32,
@@ -38,4 +50,8 @@ pub enum Command {
     Spline(Vec<Vec<Point>>),
     Wait(String),
     // End,
+}
+
+pub enum Call {
+    NewLine(String),
 }

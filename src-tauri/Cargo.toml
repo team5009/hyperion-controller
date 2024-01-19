@@ -1,7 +1,7 @@
 [package]
 name = "hyperion_controller"
 version = "0.0.0"
-description = "A Tauri App"
+description = "Hyperion Controller"
 authors = ["you"]
 license = ""
 repository = ""
@@ -15,7 +15,12 @@ tauri-build = { version = "1.5", features = [] }
 [dependencies]
 tauri = { version = "1.5", features = [ "dialog-open", "dialog-save", "fs-read-dir", "fs-create-dir", "fs-read-file", "fs-write-file", "fs-remove-file", "shell-open"] }
 serde = { version = "1.0", features = ["derive"] }
+ndarray = "0.15.6"
 serde_json = "1.0"
+rust_socketio = { version = "0.4.2", features = ["async"] }
+async-trait = "0.1.52"
+tokio = { version = "1.17.0", features = ["full"] }
+url = "2.2.2"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem

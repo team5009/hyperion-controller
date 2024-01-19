@@ -48,9 +48,7 @@ async fn connect_to_bot(
     })
     .unwrap();
 
-    let client = connect(port);
-
-    match client {
+    match connect(port) {
         Ok(client) => {
             app.emit_all("bot_connect", {
                 json!({

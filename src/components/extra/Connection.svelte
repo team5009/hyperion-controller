@@ -13,6 +13,7 @@
 
     let connStatus = ConnectionStatus.Disconnected
     let connMessage = ""
+    let retryCounter = 5
 
     onMount(async () => {
         await listen("bot_connect", (response) => {
@@ -35,6 +36,16 @@
                 case ConnectionStatus.Error:
                     connStatus = payload.status
                     connMessage = payload.message?? ""
+
+                    const interval = setInterval(() => {
+                        retryCounter--
+                        if (retryCounter <= 0) {
+                            clearInterval(interval)
+                            retryCounter = 5
+                            connStatus = ConnectionStatus.Disconnected
+                        }
+                    }, 1000)
+
                     break;
                 
                 default:
@@ -56,26 +67,35 @@
     }
 
 </script>
-
-{#if connStatus == ConnectionStatus.Connected}
-    <button on:click={disconnectFromBot}>
-        Disconnect from Bot
-    </button>
-{:else if connStatus == ConnectionStatus.Disconnected}
-    <button on:click={connectToBot}>
-        Connect to Bot
-    </button>
-{:else if connStatus == ConnectionStatus.Pending}
-    <button disabled>
-        {connMessage}
-    </button>
-{/if}
+<div>
+    {#if connStatus == ConnectionStatus.Connected}
+        <button on:click={disconnectFromBot}>
+            Disconnect from Bot
+        </button>
+    {:else if connStatus == ConnectionStatus.Disconnected}
+        <button on:click={connectToBot}>
+            Connect to Bot
+        </button>
+    {:else if connStatus == ConnectionStatus.Pending || connStatus == ConnectionStatus.Error}
+        <button disabled>
+            {connMessage}
+        </button>
+        {#if connStatus == ConnectionStatus.Error}
+            <span>
+                Retry in {retryCounter}s
+            </span>
+        {/if}
+    {/if}
+</div>
 
 <style>
-    button {
+    div {
         position: fixed;
         top: 1rem;
         left: 1rem;
         z-index: 100;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 </style>

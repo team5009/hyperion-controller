@@ -17,11 +17,11 @@ tauri = { version = "1.5", features = [ "dialog-open", "dialog-save", "fs-read-d
 serde = { version = "1.0", features = ["derive"] }
 ndarray = "0.15.6"
 serde_json = "1.0"
-rust_socketio = { version = "0.4.2", features = ["async"] }
 tungstenite = { version = "0.21.0" }
 async-trait = "0.1.52"
 tokio = { version = "1.17.0", features = ["full"] }
 url = "2.2.2"
+log = "0.4.20"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem

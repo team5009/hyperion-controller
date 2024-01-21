@@ -8,6 +8,9 @@
 </script>
 
 <section transition:fade={transition}>
+    <button on:click={() => appState.set(AppState.CONTROLLER)}>
+        Controller
+    </button>
     <button on:click={() => appState.set(AppState.CREATOR)}>
         Creator
     </button>

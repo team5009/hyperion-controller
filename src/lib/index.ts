@@ -17,6 +17,7 @@ export enum PreviewAppState {
 
 export enum AppState {
     MENU, // The app is in the menu
+    CONTROLLER, // The app is in the controller
     CREATOR, // The app is in the editor
     PREVIEW, // The app is in the preview
     SETTINGS // The app is in the settings

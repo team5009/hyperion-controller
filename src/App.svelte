@@ -7,6 +7,7 @@
   import NavBar from './components/layout/NavBar.svelte';
   import {type FadeParams} from 'svelte/transition';
   import FileInput from './components/layout/FileInput.svelte';
+  import Ping from './components/extra/Ping.svelte';
 
   let state: AppState;
   const mousePos = {
@@ -43,6 +44,7 @@
 </script>
 
 <Connection />
+<Ping />
 {#if state !== AppState.MENU}
   <NavBar />
 {/if}

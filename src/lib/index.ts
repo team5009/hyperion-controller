@@ -30,6 +30,23 @@ export enum ConnectionStatus {
     Error
 }
 
+export enum NotificationType {
+    Success,
+    Info,
+    Warning,
+    Error
+}
+
+export interface Notification {
+    show: boolean,
+    type: NotificationType,
+    message: string
+}
+
+export enum EventType {
+    
+}
+
 export function Point(x: number, y: number, rot: number): Point {
     return { x, y, rot };
 }

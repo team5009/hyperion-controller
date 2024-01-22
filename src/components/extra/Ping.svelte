@@ -13,16 +13,15 @@
             };
             
             const data = JSON.parse(payload);
-            console.log(data);
             
             switch (data.event) {
                 case 'pong':
                     ping = Date.now() - time;
-                    time = Date.now()
                     const newMessage = JSON.stringify({
                         event: 'ping',
                     });
                     await invoke('send_socket_message', { message: newMessage});
+                    time = Date.now()
                 break;
             }
         })
@@ -36,8 +35,6 @@
 <style>
   h1 {
     color: white;
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
+    font-size: 1rem;
   }
 </style>

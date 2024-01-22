@@ -7,3 +7,4 @@ export const BotSpeed = writable(0);
 export const appPreviewState = writable(0 as PreviewAppState);
 export const appState = writable(0 as AppState);
 export const pathCommands = writable([] as CommandPath[]);
+export const BotSocketConnected = writable(false);

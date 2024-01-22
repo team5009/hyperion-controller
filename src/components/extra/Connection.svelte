@@ -3,13 +3,8 @@
 	import { onMount } from 'svelte';
     import { emit, listen } from "@tauri-apps/api/event";
     import { writable } from "svelte/store";
-
-    enum ConnectionStatus {
-        Connected,
-        Disconnected,
-        Pending,
-        Error
-    }
+  import { BotSocketConnected } from '../../store';
+  import { ConnectionStatus } from '../../lib';
 
     let connStatus = ConnectionStatus.Disconnected
     let connMessage = ""
@@ -22,6 +17,7 @@
             switch (payload.status) {
                 case ConnectionStatus.Connected:
                     connStatus = payload.status
+                    BotSocketConnected.set(true)
                     break;
                 
                 case ConnectionStatus.Disconnected:
@@ -43,6 +39,7 @@
                             clearInterval(interval)
                             retryCounter = 5
                             connStatus = ConnectionStatus.Disconnected
+                            BotSocketConnected.set(false)
                         }
                     }, 1000)
 

@@ -23,6 +23,13 @@ export enum AppState {
     SETTINGS // The app is in the settings
 }
 
+export enum ConnectionStatus {
+    Connected,
+    Disconnected,
+    Pending,
+    Error
+}
+
 export function Point(x: number, y: number, rot: number): Point {
     return { x, y, rot };
 }

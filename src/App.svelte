@@ -1,13 +1,14 @@
 <script lang="ts">
 	import Connection from './components/extra/Connection.svelte';
   import Preview from './components/preview/Preview.svelte';
-  import Menu from './components/layout/Menu.svelte';
+  import MenuTemp from './components/layout/MenuTemp.svelte';
   import { BotPosition, appState, mousePosition } from './store';
   import { AppState, canvasToField, radToDeg } from './lib';
   import NavBar from './components/layout/NavBar.svelte';
   import {type FadeParams} from 'svelte/transition';
   import FileInput from './components/layout/FileInput.svelte';
   import Ping from './components/extra/Ping.svelte';
+  import Menu from './components/extra/Menu.svelte';
 
   let state: AppState;
   const mousePos = {
@@ -44,14 +45,11 @@
 </script>
 
 <Connection />
-<Ping />
-{#if state !== AppState.MENU}
-  <NavBar />
-{/if}
+<div class="bottom-right">
+  <Menu/>
+</div>
 <main>
-  {#if state == AppState.MENU}
-  <Menu transition={fadeOption}/>
-  {:else if state == AppState.SETTINGS}
+  {#if state == AppState.SETTINGS}
     <h1>Settings</h1>
   {:else}
     <div class="grid-container">
@@ -97,4 +95,13 @@
   main .grid-container .field { grid-area: field; }
   main .grid-container .info { grid-area: info; }
   main .grid-container .files { grid-area: files; }
+
+  .bottom-right {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    height: 5rem;
+    width: 5rem;
+    z-index: 100;
+  }
 </style>

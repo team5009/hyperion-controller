@@ -4,48 +4,101 @@
     import closeIcon from '@iconify/icons-majesticons/close';
     import { NotificationState } from '$store';
     import { ErrorType } from '$lib';
-    let showing: "show" | "hide" = "hide"
+    import { onMount } from 'svelte';
+  import { writable } from 'svelte/store';
+
+    let notificationContainer: HTMLElement
+
+    let Showing = writable("hide" as "hide" | "show")
+    let showing = "hide"
     let notificationType = ""
     let notificationMessage = ""
     let notificationIcon = infoCircle
+
+
  
     NotificationState.subscribe((value) => {
         notificationMessage = value.message
         switch (value.type) {
             case ErrorType.SUCCESS:
                 notificationType = "success"
-                showing = "show"
+                Showing.set("show")
                 break;
             case ErrorType.ERROR:
                 notificationType = "error"
-                showing = "show"
+                Showing.set("show")
                 break;
             case ErrorType.INFO:
                 notificationType = "info"
-                showing = "show"
+                Showing.set("show")
                 break;
             case ErrorType.WARNING:
                 notificationType = "warning"
-                showing = "show"
+                Showing.set("show")
                 break;
             case ErrorType.CRITICAL:
                 notificationType = "critical"
-                showing = "show"
+                Showing.set("show")
                 break;
             case ErrorType.NOTHING:
                 notificationType = ""
-                showing = "hide"
+                Showing.set("hide")
                 break;
         }
     })
 
+    Showing.subscribe((value) => {
+        showing = value
+    })
 
+    onMount(() => {
+        let entered = false
+        let timeout: number
+        let clicked = false
+
+        notificationContainer.addEventListener("mouseover", () => {
+            if (timeout) {
+                clearTimeout(timeout)
+            }
+            Showing.set("show")
+            entered = true
+            notificationContainer.addEventListener("mousedown", () => {
+                clicked = true
+            })
+            
+            notificationContainer.addEventListener("mouseup", () => {
+                clicked = false
+                if (!clicked) {
+                    setTimeout(() => {
+                        Showing.set("hide")
+                        setTimeout(() => {
+                            NotificationState.set({type: ErrorType.NOTHING, message: ""})
+                        }, 300)
+                    }, 1000)
+
+
+                }
+            })
+        })
+
+        notificationContainer.addEventListener("mouseleave", () => {
+            entered = false
+            if (!entered && !clicked) {
+                timeout = setTimeout(() => {
+                    Showing.set("hide")
+                    setTimeout(() => {
+                        NotificationState.set({type: ErrorType.NOTHING, message: ""})
+                    }, 300)
+                }, 3000)
+            }
+        })
+    })
 
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<section class={`${showing} ${notificationType}`} on:click={() =>  NotificationState.set({type: ErrorType.NOTHING, message: ""})}>
+<section class={`${showing} ${notificationType}`} bind:this={notificationContainer}>
     <div class={"textbox"}>
         <h1>
             {notificationType}

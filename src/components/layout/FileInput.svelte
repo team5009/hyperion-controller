@@ -1,8 +1,8 @@
 <script lang="ts">
     import {open} from '@tauri-apps/api/dialog'
     import {invoke} from '@tauri-apps/api/tauri'
-    import { appPreviewState, pathCommands } from '../../store';
-    import { AppState, PreviewAppState, type CommandPath, type Point } from '../../lib';
+    import { appPreviewState, pathCommands } from '$store';
+    import { AppState, PreviewAppState, type CommandPath, type Point } from '$lib';
     let fileInput: HTMLInputElement;
     const commands: CommandPath[] = []
     const clickHandler = async () => {

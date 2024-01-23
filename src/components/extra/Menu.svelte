@@ -6,8 +6,8 @@
     import robotIcon from '@iconify/icons-majesticons/robot';
     import settingsCog from '@iconify/icons-majesticons/settings-cog';
     import Ping from './Ping.svelte';
-    import { BotSocketConnected, appState } from '../../store';
-    import { AppState } from '../../lib';
+    import { BotSocketConnected, appState } from '$store';
+    import { AppState } from '$lib';
 
     let botConnected = false
 

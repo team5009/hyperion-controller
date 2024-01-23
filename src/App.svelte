@@ -9,12 +9,13 @@
   import FileInput from './components/layout/FileInput.svelte';
   import Ping from './components/extra/Ping.svelte';
   import Menu from './components/extra/Menu.svelte';
+  import Notifications from './components/extra/Notifications.svelte';
 
-  let state: AppState;
-  const mousePos = {
+    let state: AppState;
+    const mousePos = {
         x: "0",
         y: "0"
-    }
+    };
     const botPos = {
         x: "0",
         y: "0",
@@ -45,6 +46,7 @@
 </script>
 
 <Connection />
+<Notifications />
 <div class="bottom-right">
   <Menu/>
 </div>

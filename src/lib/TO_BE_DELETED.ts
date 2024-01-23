@@ -1,4 +1,4 @@
-import { Point } from ".";
+import { Point } from "$lib";
 
 export function Lerp(a: number, b: number, t: number): number {
     return a + (b - a) * t;
@@ -27,7 +27,7 @@ export function Bezier(p0: Point, c0: Point, c1: Point, p1: Point): Point[] {
             rot *= 180 / Math.PI;
         }
         
-        points.push(Point(x, y, rot));
+        points.push(new Point(x, y, rot));
     }
     return points;
 }

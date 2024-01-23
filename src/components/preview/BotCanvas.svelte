@@ -1,9 +1,9 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { Bot, PreviewAppState, canvasToField, degToRad, type CommandPath, Bezier, Point } from "../../lib";
-    import { BotPosition, appPreviewState, pathCommands } from "../../store";
-  import { writable } from "svelte/store";
-  import { invoke } from "@tauri-apps/api/tauri";
+    import { Bot, PreviewAppState, canvasToField, degToRad, type CommandPath, Point } from "$lib";
+    import { BotPosition, appPreviewState, pathCommands } from "$store";
+    import { writable } from "svelte/store";
+    import { invoke } from "@tauri-apps/api/tauri";
     export let resolution: number;
 
     let c: HTMLCanvasElement;

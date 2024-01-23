@@ -1,10 +1,9 @@
 <script lang="ts">
 	import { invoke } from '@tauri-apps/api/tauri';
 	import { onMount } from 'svelte';
-    import { emit, listen } from "@tauri-apps/api/event";
-    import { writable } from "svelte/store";
-  import { BotSocketConnected } from '../../store';
-  import { ConnectionStatus } from '../../lib';
+    import { listen } from "@tauri-apps/api/event";
+    import { BotSocketConnected, NotificationState } from '$store';
+    import { ConnectionStatus, ErrorType } from '$lib';
 
     let connStatus = ConnectionStatus.Disconnected
     let connMessage = ""
@@ -18,10 +17,13 @@
                 case ConnectionStatus.Connected:
                     connStatus = payload.status
                     BotSocketConnected.set(true)
+                    NotificationState.set({type: ErrorType.SUCCESS, message: "Connected to Bot"})
                     break;
                 
                 case ConnectionStatus.Disconnected:
                     connStatus = payload.status
+                    BotSocketConnected.set(false)
+                    NotificationState.set({type: ErrorType.SUCCESS, message: "Disconnected from Bot"})
                     break;
 
                 case ConnectionStatus.Pending:
@@ -32,6 +34,7 @@
                 case ConnectionStatus.Error:
                     connStatus = payload.status
                     connMessage = payload.message?? ""
+                    NotificationState.set({type: ErrorType.ERROR, message: connMessage})
 
                     const interval = setInterval(() => {
                         retryCounter--

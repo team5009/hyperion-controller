@@ -1,10 +1,10 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import {Bezier, Circle, Point, PreviewAppState, fieldToCanvas} from "../../lib";
-  import { BotPosition, appPreviewState } from "../../store";
+  import {Circle, Point, PreviewAppState, fieldToCanvas} from "$lib";
+  import { BotPosition, appPreviewState } from "$store";
 
     export let resolution: number;
-    const botPos = Point(-100, -100, 0);
+    const botPos = new Point(-100, -100, 0);
 
     let c: HTMLCanvasElement;
     let AppState: PreviewAppState;
@@ -32,21 +32,16 @@
         const maxHeight = c.height;
 
         const mapPoints: Point[] = [
-            Point(-36, -50, 90),
-            Point(-48, -40, 0),
-            Point(-48, -40, 0),
-            Point(-65, -60, 90),
+            new Point(-36, -50, 90),
+            new Point(-48, -40, 0),
+            new Point(-48, -40, 0),
+            new Point(-65, -60, 90),
         ]
         
         for (let i = 0; i < mapPoints.length; i++) {
-            mapPoints[i] = Point(fieldToCanvas(mapPoints[i]).x, fieldToCanvas(mapPoints[i]).y, mapPoints[i].rot);
+            mapPoints[i] = new Point(fieldToCanvas(mapPoints[i]).x, fieldToCanvas(mapPoints[i]).y, mapPoints[i].rot);
         }
 
-        const bezierPoints = Bezier(mapPoints[0], mapPoints[1], mapPoints[2], mapPoints[3]);
-
-        for (const point of bezierPoints) {
-            new Circle(point.x, point.y, 3, "green",5).draw(ctx);
-        }
 
         const update = () => {
             requestAnimationFrame(update);

@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { Line, canvasToField } from "../../lib";
-    import { mousePosition } from "../../store";
+    import { Line, canvasToField } from "$lib";
+    import { mousePosition } from "$store";
     export let resolution: number;
 
     let c: HTMLCanvasElement;

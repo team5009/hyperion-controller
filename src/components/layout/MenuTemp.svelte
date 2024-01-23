@@ -1,7 +1,7 @@
 <script lang="ts">
     import { fade, type FadeParams } from "svelte/transition";
-    import { AppState } from "../../lib";
-    import { appState } from "../../store";
+    import { AppState } from "$lib";
+    import { appState } from "$store";
 
     export let transition: FadeParams
 

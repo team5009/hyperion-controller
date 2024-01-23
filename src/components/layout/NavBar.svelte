@@ -1,7 +1,6 @@
 <script lang="ts">
-    import { AppState } from "../../lib";
-  import app from "../../main";
-    import { appState } from "../../store";
+    import { AppState } from "$lib";
+    import { appState } from "$store";
 
     let state: AppState;
     const buttons = [

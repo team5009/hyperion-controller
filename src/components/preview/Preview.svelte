@@ -1,10 +1,10 @@
 <script lang="ts">
     import { fade, type FadeParams } from "svelte/transition";
-    import { PreviewAppState, canvasToField, radToDeg, resolution } from "../../lib";
-    import { BotPosition, appPreviewState, mousePosition } from "../../store";
-    import FieldMap from "../layout/FieldMap.svelte";
+    import { PreviewAppState, canvasToField, radToDeg, resolution } from "$lib";
+    import { BotPosition, appPreviewState, mousePosition } from "$store";
+    // import FieldMap from "../FieldCanvas/FieldMap.svelte";
     import BotCanvas from "./BotCanvas.svelte";
-    import FieldCanvas from "./FieldCanvas.svelte";
+    import FieldCanvas from "../FieldCanvas/FieldCanvas.svelte";
     import PathCanvas from "./PathCanvas.svelte";
     const fieldResolution = resolution;
     export let transition: FadeParams
@@ -16,7 +16,7 @@
         <FieldCanvas resolution={fieldResolution}/>
         <BotCanvas resolution={fieldResolution}/>
         <PathCanvas resolution={fieldResolution}/>
-        <FieldMap/>
+        <!-- <FieldMap/> -->
     </div>
     <div>
         <button on:click={() => appPreviewState.set(PreviewAppState.RESETING)}>Reset</button>

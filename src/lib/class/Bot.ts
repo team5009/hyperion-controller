@@ -1,5 +1,5 @@
-import { Point, degToRad, Square, Line, Circle, refDeg, resolution } from ".";
-import { fieldToCanvas, refRad } from "./math";
+
+import { Circle, Line, Point, Square, degToRad, fieldToCanvas, refRad, resolution } from "$lib";
 
 export class Bot {
     dx: number;
@@ -8,7 +8,7 @@ export class Bot {
     x: number;
     y: number;
     rot: number;
-    finalPoint: Point = Point(0, 0, 0);
+    finalPoint: Point = new Point(0, 0, 0);
     constructor(
         point: Point,
         private speed: number,

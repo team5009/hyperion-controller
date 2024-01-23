@@ -1,5 +1,6 @@
 import { writable } from "svelte/store";
-import { PreviewAppState, type Point, AppState, type CommandPath } from "./lib";
+import { PreviewAppState, type Point, AppState, type CommandPath, ErrorType } from "$lib";
+
 
 export const mousePosition = writable({ x: 0, y: 0 });
 export const BotPosition = writable({ x: 0, y: 0, rot: 0 } as Point);
@@ -8,3 +9,4 @@ export const appPreviewState = writable(0 as PreviewAppState);
 export const appState = writable(0 as AppState);
 export const pathCommands = writable([] as CommandPath[]);
 export const BotSocketConnected = writable(false);
+export const NotificationState = writable({type: ErrorType.NOTHING} as { type: ErrorType, message: string });

@@ -45,7 +45,7 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<section class={`${showing} ${notificationType}`} on:click={() =>  NotificationState.set({type: ErrorType.NOTHING, message: ""})} on:mouseenter={handleHoverClose}>
+<section class={`${showing} ${notificationType}`} on:click={() =>  NotificationState.set({type: ErrorType.NOTHING, message: ""})}>
     <div class={"textbox"}>
         <h1>
             {notificationType}

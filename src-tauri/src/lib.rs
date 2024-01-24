@@ -15,14 +15,6 @@ pub enum State {
 }
 
 #[derive(serde::Serialize, serde::Deserialize)]
-pub enum ConnectionStatus {
-    Connected,
-    Disconnected,
-    Pending,
-    Error,
-}
-
-#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Point {
     x: f32,
     y: f32,
@@ -54,4 +46,12 @@ pub enum Command {
 
 pub enum Call {
     NewLine(String),
+}
+
+#[derive(serde::Serialize, serde::Deserialize)]
+pub enum ConnectionStatus {
+    Connected,
+    Disconnected,
+    Pending,
+    Error,
 }

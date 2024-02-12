@@ -2,10 +2,11 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use hyperion_controller::connection::connect;
+use hyperion_controller::controller::support_controller;
 use hyperion_controller::misc::socket_handle;
 use hyperion_controller::{
-    connection::SocketConnection, construction::parse_commands, math::bezier_curve,
-    ConnectionStatus, Point,
+    connection::SocketConnection, construction::command_read, math::bezier_curve, ConnectionStatus,
+    Point,
 };
 use log::{error, info};
 use serde_json::{json, Value};
@@ -114,7 +115,7 @@ async fn load_file(path: String) -> Value {
     }
 
     let file_content = fs::read_to_string(path).expect("Unable to read file");
-    parse_commands(file_content)
+    command_read(file_content).unwrap()
 }
 
 #[tauri::command]
@@ -132,7 +133,7 @@ async fn main() {
     tauri::Builder::default()
         .setup(|app| {
             tauri::async_runtime::spawn(socket_handle(app.app_handle()));
-
+            tauri::async_runtime::spawn(support_controller(app.app_handle()));
             Ok(())
         })
         .manage(SocketConnection(Default::default()))
@@ -143,6 +144,7 @@ async fn main() {
             disconnect_bot,
             send_socket_message
         ])
+        .plugin(tauri_plugin_store::Builder::default().build())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

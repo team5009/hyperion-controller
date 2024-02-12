@@ -6,7 +6,7 @@
     import robotIcon from '@iconify/icons-majesticons/robot';
     import settingsCog from '@iconify/icons-majesticons/settings-cog';
     import Ping from './Ping.svelte';
-    import { BotSocketConnected, appState } from '$store';
+    import { BotSocketConnected, SettingsModalState, appState } from '$store';
     import { AppState } from '$lib';
 
     let botConnected = false
@@ -34,7 +34,7 @@
         {
             name: 'Settings',
             icon: settingsCog,
-            action: () => appState.set(AppState.SETTINGS)
+            action: () => SettingsModalState.set(true)
         }
     ]
 </script>
@@ -54,9 +54,7 @@
         {/each}
     </ul>
     <ul class="extra">
-        {#if !botConnected}
-
-        {:else} 
+        {#if botConnected}
             <li>
                 <Ping/>
             </li>
@@ -83,7 +81,7 @@
         height: 5rem;
         position: relative;
         border-radius: 100%;
-        background-color: blue;
+        background-color: var(--secondary);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -92,7 +90,6 @@
         transition: all 0.5s ease;
     }
     .container_menu  [type="checkbox"]:checked + label {
-        background-color: red;
         transform: scale(0.75);
     }
     .container_menu  [type="checkbox"]:not(:checked) + label:hover {
@@ -129,9 +126,13 @@
         width: 2.5rem;
     }
 
+    .container_menu .menu li button:hover {
+        scale: 1.1;
+    }
+
     .container_menu .menu li button {
         color: white;
-        background-color: blue;
+        background-color: var(--secondary);
         border: none;
         border-radius: 100%;
         padding: 0;
@@ -141,7 +142,10 @@
         justify-content: center;
         align-items: center;
         box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+        transition: all 0.5s ease;
     }
+
+
 
     .container_menu input:checked ~ ul li {
         opacity: 1;

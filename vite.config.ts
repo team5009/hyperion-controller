@@ -23,7 +23,7 @@ export default defineConfig(async () => ({
   resolve: {
     alias: {
       $lib: "./src/lib/index.ts",
-      "$components": "./src/components",
+      $components: "./src/components/",
       $store: "src/store.ts",
     },
   }

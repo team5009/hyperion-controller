@@ -1,37 +1,39 @@
-use ndarray::arr2;
-
-use crate::Point;
+use crate::{Event, Point};
 use serde_json::{json, Value};
 
 pub fn bezier_curve(points: Vec<Point>, resolution: u32) -> Value {
-    let matrix_a = arr2(&[
-        [1.0, -3.0, 3.0, -1.0],
-        [0.0, 3.0, -6.0, 3.0],
-        [0.0, 0.0, 3.0, -3.0],
-        [0.0, 0.0, 0.0, 1.0],
-    ]);
-
-    let matrix_b = arr2(&[
-        [points[0].x, points[0].y],
-        [points[1].x, points[1].y],
-        [points[2].x, points[2].y],
-        [points[3].x, points[3].y],
-    ]);
-
-    let matrix = matrix_a.dot(&matrix_b);
-
-    let mut points: Vec<Point> = vec![];
+    let mut temp_points: Vec<Point> = vec![];
 
     for i in 0..(resolution + 1) {
-        let t = i as f32 / resolution as f32;
-        let t2 = t * t;
-        let t3 = t2 * t;
+        let t = i as f64 / resolution as f64;
 
-        let x = matrix[[0, 0]] * t3 + matrix[[1, 0]] * t2 + matrix[[2, 0]] * t + matrix[[3, 0]];
-        let y = matrix[[0, 1]] * t3 + matrix[[1, 1]] * t2 + matrix[[2, 1]] * t + matrix[[3, 1]];
+        let x = (1.0 - t).powi(3) * points[0].x  // X Point
+            + 3.0 * (1.0 - t).powi(2) * t * points[1].x
+            + 3.0 * (1.0 - t) * t.powi(2) * points[2].x
+            + t.powi(3) * points[3].x;
 
-        points.push(Point::new(x, y, 0.0));
+        let y = (1.0 - t).powi(3) * points[0].y  // Y point
+            + 3.0 * (1.0 - t).powi(2) * t * points[1].y
+            + 3.0 * (1.0 - t) * t.powi(2) * points[2].y
+            + t.powi(3) * points[3].y;
+
+        if (i as f64 / resolution as f64) == 0.0 {
+            // For the first point, use the first event
+            temp_points.push(Point::new(x, y, 0.0, points[0].event.clone()));
+        } else if (i as f64 / resolution as f64) == 1.0 {
+            // For the last point, use the last event
+            temp_points.push(Point::new(x, y, 0.0, points[3].event.clone()));
+        } else if (i as f64 / resolution as f64) == (1.0 / 4.0) {
+            // For 1/4 of the way through, use the first control point event
+            temp_points.push(Point::new(x, y, 0.0, points[1].event.clone()));
+        } else if (i as f64 / resolution as f64) == (3.0 / 4.0) {
+            // For 3/4 of the way through, use the second control point event
+            temp_points.push(Point::new(x, y, 0.0, points[2].event.clone()));
+        } else {
+            // For all other points, use the "nothing" event (which is just an empty string)
+            temp_points.push(Point::new(x, y, 0.0, Event::new("nothing".to_string())));
+        }
     }
 
-    json!(points)
+    json!(temp_points)
 }

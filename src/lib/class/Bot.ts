@@ -45,7 +45,8 @@ export class Bot {
     updateNextPoint(point: Point) {
         this.finalPoint = {
             ...fieldToCanvas(point),
-            rot: degToRad(point.rot)
+            rot: degToRad(point.rot),
+            event: point.event
         }
     }
 

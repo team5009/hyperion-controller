@@ -28,7 +28,7 @@
             new Line(i, 5, i, maxHeight - 5, "#ffffff40", gridThickness).draw(ctx);
             ctx.font = "60px Arial";
             ctx.textAlign = "center";
-            ctx.fillStyle = "white";
+            ctx.fillStyle = "#ff9812";
             ctx.textBaseline = "top";
             ctx.fillText(canvasToField({x: i, y: i}).x.toString(), i, 10);
         }
@@ -39,10 +39,13 @@
             new Line(5, i, maxWidth - 5, i, "#ffffff40", gridThickness).draw(ctx);
             ctx.font = "60px Arial";
             ctx.textAlign = "left";
-            ctx.fillStyle = "white";
+            ctx.fillStyle = "#ff9812";
             ctx.textBaseline = "top";
             ctx.fillText(canvasToField({x: i, y: i}).x.toString(), 10, i);
         }
+
+        new Line(0, maxHeight / 2, maxWidth, maxHeight / 2, "white", poleThickness).draw(ctx);
+        new Line(maxWidth / 2, 0, maxWidth / 2, maxHeight, "white", poleThickness).draw(ctx);
     });
 
     function handleMouseDown(e: MouseEvent) {
@@ -61,7 +64,6 @@
         mousePosition.set({
             x: Math.round(mouse.x),
             y: Math.round(mouse.y)
-        
         });
     }
     

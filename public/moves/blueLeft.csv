@@ -1,15 +1,13 @@
 start   ,-63 ,-12     , 0 ,NOTHING
-goto    ,-35 ,-12     , 0 ,NOTHING
-wait    , OUTTAKE,NOTHING
-goto    ,-36 ,-50     ,90 ,NOTHING
-wait    , OUTTAKE_LIFT,NOTHING
+line    ,-35 ,-12     , 0 ,NOTHING
+wait    , Purple_Outtake_Finish, Purple_Outtake
+line   ,-36 ,-50     ,90 , Setup_Lift
+wait    , Yellow_Outtake_Finish, Yellow_Outtake
 spline, NOTHING
-bezier  ,-36 ,-50     ,90 ,NOTHING
-control ,24 ,-24     , 0 ,NOTHING
-control ,24 ,24     , 0 ,NOTHING
-bezier  ,-12 ,60     ,90 ,NOTHING
-bezier  ,-12 ,60     ,90 ,NOTHING
-control ,24 ,24     , 0 ,NOTHING
-control ,24 ,-24     , 0 ,NOTHING
-bezier  ,-36 ,-50     ,90 ,NOTHING
+bezier ,-36 ,-50     ,90 , Drop_Lift
+control ,-72 ,-24     , 0 ,NOTHING
+control ,-66 ,64     , 0 ,NOTHING
+bezier  ,-36 ,60     ,90 , NOTHING
 spline, NOTHING
+wait, 5sec, NOTHING
+end, Close_All

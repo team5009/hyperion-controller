@@ -22,6 +22,8 @@
         const rust_input = await invoke('load_file', {path: file}) as CommandPath[]
 
         commands.push(...rust_input)
+
+        console.log(commands)
     }
 
     const confirmPath = async () => {

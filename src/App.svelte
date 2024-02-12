@@ -2,14 +2,30 @@
 	import Connection from './components/extra/Connection.svelte';
   import Preview from './components/preview/Preview.svelte';
   import MenuTemp from './components/layout/MenuTemp.svelte';
-  import { BotPosition, appState, mousePosition } from './store';
-  import { AppState, canvasToField, radToDeg } from './lib';
+  import { BotPosition, SettingsState, appState, mousePosition } from '$store';
+  import { AppState, canvasToField, radToDeg, type Settings } from '$lib';
   import NavBar from './components/layout/NavBar.svelte';
   import {type FadeParams} from 'svelte/transition';
   import FileInput from './components/layout/FileInput.svelte';
   import Ping from './components/extra/Ping.svelte';
   import Menu from './components/extra/Menu.svelte';
   import Notifications from './components/extra/Notifications.svelte';
+  import SettingsModal from './components/settings/SettingsModal.svelte';
+  import WindowBar from './components/layout/WindowBar.svelte';
+  import { onMount } from 'svelte';
+  import { Store } from 'tauri-plugin-store-api';
+  import { get } from 'svelte/store';
+
+  onMount(async () => {
+    let store: Store = new Store(".settings.json");
+
+    if (!(await store.has("settings"))) {
+      await store.set("settings", get(SettingsState));
+      await store.save();
+    }
+    const settings = (await store.get("settings")) as Settings;
+    SettingsState.set(settings);
+  })
 
     let state: AppState;
     const mousePos = {
@@ -44,9 +60,9 @@
 
   }
 </script>
-
-<Connection />
+<!-- <WindowBar /> -->
 <Notifications />
+<SettingsModal />
 <div class="bottom-right">
   <Menu/>
 </div>

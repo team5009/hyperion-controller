@@ -1,0 +1,14 @@
+start   ,-36 ,-50     ,90 ,NOTHING
+spline, NOTHING
+bezier  ,-36 ,-50     ,90 , Drop_Lift
+control ,24 ,-24     , 0 ,NOTHING
+control ,24 ,24     , 0 ,NOTHING
+bezier  ,-12 ,60     ,90 , NOTHING
+wait    , Intake_Pixel_Finish, Intake_Pixel
+bezier  ,-12 ,60     ,90 ,NOTHING
+control ,24 ,24     , 0 ,NOTHING
+control ,24 ,-24     , 0 ,Setup_Lift
+bezier  ,-36 ,-50     ,90 ,NOTHING
+wait    , Pixel_Outtake_Finish, Pixel_Outtake
+spline, NOTHING
+end, Close_All

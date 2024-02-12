@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { Bot, PreviewAppState, canvasToField, degToRad, type CommandPath, Point } from "$lib";
+    import { Bot, PreviewAppState, canvasToField, degToRad, type CommandPath, Point, Event } from "$lib";
     import { BotPosition, appPreviewState, pathCommands } from "$store";
     import { writable } from "svelte/store";
     import { invoke } from "@tauri-apps/api/tauri";
@@ -53,7 +53,7 @@
             throw new Error("Could not get context");
         }
 
-        let startPos = {x: 0, y: 0, rot: 0};
+        let startPos = {x: 0, y: 0, rot: 0, event: new Event("nothing")};
         
         const bot = new Bot(startPos, speed);
         BotPosition.set(bot);
@@ -83,12 +83,12 @@
                     pointStep++;
                     break;
                 }
-                case "goto": {
+                case "line": {
                     if (pointStep >= commandPath.length) {
                         appPreviewState.set(PreviewAppState.STOPPED);
                         return;
                     }
-                    const point = commandPath[pointStep].Goto;
+                    const point = commandPath[pointStep].Line;
                     if (
                         Math.abs(convertBot.x - point.x) <= 1080/resolution * 0.8 &&
                         Math.abs(convertBot.y - point.y) <= 1080/resolution * 0.8 &&
@@ -119,33 +119,58 @@
                         isSpline = false;
                         break;
                     }
-                    if (!isSpline) {
-                        const bezier = await invoke('gen_bezier_points', {points: spline[splineStep], resolution: 20}) as Point[]
-                        bezierPoints.push(...bezier);
-                        isSpline = true;
-                    }
 
-                    if (isSpline) {
-                        if (bezierStep >= bezierPoints.length) {
-                            bezierStep = 0;
-                            splineStep++;
-                            isSpline = false;
+                    switch(Object.keys(spline[splineStep])[0].toLowerCase()) {
+                        case "bezier" : {
+                            if (!isSpline) {
+                                const startBezier = spline[splineStep].Bezier.start;
+                                const endBezier = spline[splineStep].Bezier.end;
+                                const controlBezier = spline[splineStep].Bezier.control;
+                                const bezierToConvert = [startBezier, ...controlBezier, endBezier];
+                                const tempBezier = await invoke('gen_bezier_points', {points: bezierToConvert, resolution: 20}) as Point[]
+                                bezierPoints.push(...tempBezier);
+                                bot.updateNextPoint(bezierPoints[bezierPoints.length - 1])
+                                isSpline = true;
+                            }
+
+                            if (isSpline) {
+                                if (bezierStep + 1 > bezierPoints.length - 1) {
+                                    bezierStep = 0;
+                                    splineStep++;
+                                    isSpline = false;
+                                    break;
+                                }
+                                const point = bezierPoints[bezierStep + 1];
+                                console.table({
+                                    bot: convertBot,
+                                    point: point,
+                                    diff: 5
+                                })
+                                if (
+                                    (Math.abs(convertBot.x - point.x) <= 55 &&
+                                    Math.abs(convertBot.y - point.y) <= 5) &&
+                                    Math.abs(bot.rot - degToRad(point.rot)) >= Math.PI / 3
+                                ) {
+                                    console.log(bezierStep)
+                                    bezierStep++;
+                                } else {
+                                    console.log(`Updating bot ${point.x}, ${point.y}`)
+                                    console.log(bezierPoints[bezierPoints.length - 1])
+                                    bot.update(ctx, {x: maxWidth, y: maxHeight}, point);
+                                }
+                            }
                             break;
                         }
-                        const point = bezierPoints[bezierStep];
-                        if (
-                            Math.abs(convertBot.x - point.x) >= 1080/resolution * 0.8 &&
-                            Math.abs(convertBot.y - point.y) >= 1080/resolution * 0.8 &&
-                            Math.abs(bot.rot - degToRad(point.rot)) >= Math.PI / 3
-                            ) {
-                            console.log(bezierPoints[bezierPoints.length - 1])
-                            bot.updateNextPoint(bezierPoints[bezierPoints.length - 1])
-                            bot.update(ctx, {x: maxWidth, y: maxHeight}, point);
-                        } else {
-                            bezierStep++;
+                        case "wait" : {
+                            console.log(`Waiting for ${commandPath[pointStep].Wait} to succeed`);
+                            // console.log(botStateString)
+                            if (botStateString === "") botState.set("wait");
+                            if (botStateString === "complete") {
+                                splineStep++
+                                botState.set("")};
+                            break;
                         }
                     }
-
                     break;
                 }
             }

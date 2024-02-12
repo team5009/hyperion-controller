@@ -8,9 +8,9 @@ export default {
   kit : {
     alias : {
       "$" : "src/",
-      "$components" : "src/components",
+      "$components" : "src/components/",
       "$store" : "src/store.ts",
-      "$lib" : "src/lib",
+      "$lib" : "src/lib/",
     }
   }
 };
